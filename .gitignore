@@ -59,3 +59,7 @@ typings/
 
 # Private key
 *.key
+
+# Emacs files
+*~
+\#*\#
