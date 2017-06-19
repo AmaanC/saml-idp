@@ -1,0 +1,72 @@
+May 19, 2017
+01:40pm
+
+As always, my beloved thought-log!
+Here's what I've just learned:
+- cert = public key
+- key = private key
+- signing_key.{cert,key} are similar^ for SAMLRequests
+
+For now, I'm going to _pretend_ that this IdP won't get signed
+SAMLRequests.
+
+May 19, 2017
+01:53pm
+
+More things to consider! Should I allow users to submit ejs tempalates
+directly?! HELL. NO.
+
+Here's how it's done in passport:
+https://github.com/auth0/passport-wsfed-saml2/blob/master/lib/passport-wsfed-saml2/samlp.js#L112
+
+May 19, 2017
+02:34pm
+
+Need to think about the session stuff - are the requests independent?
+I don't see a need for them to be.
+Flow:
+
+- samlidp.com/login?SAMLRequest=abc&RelayState=xyz
+- POST samlidp.com/continue { SAMLRequest: abc, template: ... }
+- POST a.auth0.com/login/callback { SAMLResponse: ..., RelayState: ..}
+
+This way we may leave ourselves open to an open-redirect, right? If
+samlidp.com/continue accepts any redirect_uri, it can be used by
+anyone for malicious purposes.
+I think I'll need a database or something, then, maybe?
+
+Okay, let's think of an alternate flow, maybe.
+You visit samlidp.com and are asked for config options such as:
+- Callback URL
+- SAMLRequest public key (optional)
+- SAMLResponse encryption params? No, this should be on the template
+page
+- SAMLIdP.com's public key (for SAMLResponses)
+
+Not fond of that idea - I want this to be a very low friction
+thing. Just BAM, debug your shit. Right? Do we need samlidp to have a
+server with everyone's individual config? Bah, fuck that.
+
+Alternates:
+- Include the redirect URL in the SAMLRequest
+- Use the referrer or something
+
+I'm not fond of this because it still qualifies as an open redirect of
+sorts, right?
+Send someone to POST /continue { redirect: evil.com } and they'll
+think they're on Auth0 property.
+
+Nein. Das kann nicht sein. Wir mussen Sicherheit haben.
+
+So I guess the only option is to "register" for a callback URL? How
+does that help, though? If anyone can get a SAML IdP, it's just a step
+of indirection.
+
+Is this something to be concerned about?
+
+I don't think so, given that it's a POST request.
+This agrees:
+https://www.netsparker.com/web-vulnerability-scanner/vulnerability-security-checks-index/open-redirection-in-post-method/
+
+Checked with Radekk too - if I use POST and whitelist only auth0
+subdomains, it should be fine, I think.

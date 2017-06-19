@@ -1,0 +1,26 @@
+<html><head></head><body><h1 id="magical-saml-idp">Magical SAML IdP</h1>
+<ol>
+<li><a href="https://manage.auth0.com/#/connections/enterprise">Head to your Auth0 Dashboard</a></li>
+<li>Create a new SAML connection</li>
+<li>Use a URL such as: <code>http://localhost:3000/login?&amp;audience=urn:auth0:YOUR_TENANT:CONNECTION_NAME&amp;redirect_uri=https://YOUR_TENANT.auth0.com/login/callback?connection=CONNECTION_NAME</code></li>
+<li>Download and use the cert from <a href="http://localhost:3000/server.cert">http://localhost:3000/server.cert</a></li>
+<li>Hit Try and make sure it works (or try <a href="http://localhost:3000/login">an IdP initiated flow</a>)!</li>
+</ol>
+<h2 id="template-variables-supported">Template variables supported</h2>
+<pre><code>templateVariables = {
+    id: '_abc',
+    inResponseTo: SAMLRequest.id,
+    instant: issueInstant,
+    after: issueInstant + 1 day,
+    redirect_uri: req.body.redirect_uri,
+    destination: req.body.redirect_uri ||
+        SAMLRequest.destination || '_mockedDestination',
+    audience: req.body.audience || 'urn:_fake',
+    issuer: 'SAMLIdPIssuer',
+    successStatusCode: 'urn:oasis:names:tc:SAML:2.0:status:Success'
+    assertion: signedAssertion
+};
+</code></pre>
+
+Example: <pre>The time is: @@instant@@</pre>
+</body></html>

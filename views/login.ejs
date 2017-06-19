@@ -1,0 +1,109 @@
+<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.26.0/codemirror.js'></script>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.26.0/codemirror.min.css'>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.26.0/mode/xml/xml.min.js'></script>
+
+<form action='/continue' method='POST'>
+
+<p>
+<label>SAML Assertion
+<br>
+<textarea cols='80' rows='10' id='SAMLAssertion' name='SAMLAssertion'>
+<%=
+`    <saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+IssueInstant="@@instant@@" Version="2.0">
+        <saml:Issuer>@@issuer@@</saml:Issuer>
+        <saml:Subject>
+            <saml:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified" NameQualifier="">john.doe@example.com</saml:NameID>
+            <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+                <saml:SubjectConfirmationData InResponseTo="@@inResponseTo@@" NotOnOrAfter="@@after@@" Recipient="@@redirect_uri@@" /></saml:SubjectConfirmation>
+        </saml:Subject>
+        <saml:Conditions NotBefore="@@instant@@" NotOnOrAfter="@@after@@">
+            <saml:AudienceRestriction>
+                <saml:Audience>@@audience@@</saml:Audience>
+            </saml:AudienceRestriction>
+        </saml:Conditions>
+        <saml:AuthnStatement AuthnInstant="@@instant@@" SessionIndex="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb">
+            <saml:AuthnContext>
+                <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef>
+            </saml:AuthnContext>
+        </saml:AuthnStatement>
+        <saml:AttributeStatement>
+            <saml:Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+                <saml:AttributeValue xsi:type="xs:string">john.doe@example.com</saml:AttributeValue>
+            </saml:Attribute>
+            <saml:Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress">
+                <saml:AttributeValue xsi:type="xs:string">john.doe@example.com</saml:AttributeValue>
+            </saml:Attribute>
+        </saml:AttributeStatement>
+    </saml:Assertion>
+`
+%>
+
+</textarea>
+</label>
+</p>
+
+<input type='hidden' name='SAMLRequest' value='<%= SAMLRequest %>'>
+
+<label>Redirect URI
+<input name='redirect_uri' value='<%= redirect_uri %>'>
+</label>
+
+<br>
+
+<label>Audience
+<input name='audience' value='<%= audience %>'>
+</label>
+
+<br>
+
+<label>RelayState
+<input name='RelayState' value='<%= RelayState %>'>
+</label>
+
+<p>
+<label>SAMLTemplate
+<br>
+<textarea id='SAMLTemplate' name='SAMLTemplate' cols='80' rows='4'>
+<%=
+`<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" ID="@@id@@" InResponseTo="@@inResponseTo@@" Version="2.0" IssueInstant="@@instant@@" Destination="@@destination@@">
+    <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">
+        @@issuer@@
+    </saml:Issuer>
+    <samlp:Status>
+        <samlp:StatusCode Value="@@successStatusCode@@" />
+    </samlp:Status>
+    @@assertion@@
+</samlp:Response>
+` %>
+</textarea>
+</label>
+</p>
+
+<input type='submit'>
+
+</form>
+
+<script>
+
+var cmOptions = {
+    mode: "xml",
+    indentWithTabs: false,
+    indentUnit: 4,
+    lineNumbers: true
+};
+
+window.onload = function() {
+    CodeMirror.fromTextArea(
+        document.getElementById('SAMLAssertion'),
+        cmOptions
+    );
+
+    CodeMirror.fromTextArea(
+        document.getElementById('SAMLTemplate'),
+        cmOptions
+    );
+};
+
+</script>
