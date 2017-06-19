@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
 router.get('/login', loginRoute);
 router.post('/continue', parameters({
     body: ['SAMLTemplate', 'SAMLAssertion', 'redirect_uri',
-           'audience', 'RelayState', 'SAMLRequest']
+           'RelayState', 'SAMLRequest']
 }), continueRoute);
 
 router.get('/server.cert', function(req, res){
