@@ -40,3 +40,5 @@ The time is: @@instant@@
 - Audience: What you want made available in `@@audience@@` - optional, but you'll likely want to set this
 - RelayState: The `RelayState` parameter that is sent to the redirect URI
 - SAMLTemplate: The template for the overall SAMLResponse. In this template the SAMLAssertion from earlier is signed and made available in `@@assertion@@`
+
+![Screenshot of UI](http://i.imgur.com/DWBT3Dr.png)
