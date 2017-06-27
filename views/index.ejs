@@ -1,13 +1,20 @@
-<html><head></head><body><h1 id="magical-saml-idp">Magical SAML IdP</h1>
-<ol>
-<li><a href="https://manage.auth0.com/#/connections/enterprise">Head to your Auth0 Dashboard</a></li>
-<li>Create a new SAML connection</li>
-<li>Use a URL such as: <code>https://mock-saml-idp.herokuapp.com/login?&amp;audience=urn:auth0:YOUR_TENANT:CONNECTION_NAME&amp;redirect_uri=https://YOUR_TENANT.auth0.com/login/callback?connection=CONNECTION_NAME</code></li>
-<li>Download and use the cert from <a href="https://mock-saml-idp.herokuapp.com/server.cert">https://mock-saml-idp.herokuapp.com/server.cert</a></li>
-<li>Hit Try and make sure it works (or try <a href="https://mock-saml-idp.herokuapp.com/login">an IdP initiated flow</a>)!</li>
-</ol>
-<h2 id="template-variables-supported">Template variables supported</h2>
-<pre><code>templateVariables = {
+<html>
+
+<head>
+    <title>Mock SAML IdP</title>
+</head>
+
+<body>
+    <h1 id="magical-saml-idp">Magical SAML IdP</h1>
+    <ol>
+        <li><a href="https://manage.auth0.com/#/connections/enterprise">Head to your Auth0 Dashboard</a></li>
+        <li>Create a new SAML connection</li>
+        <li>Use a URL such as: <code>https://mock-saml-idp.herokuapp.com/login?&amp;audience=urn:auth0:YOUR_TENANT:CONNECTION_NAME&amp;redirect_uri=https://YOUR_TENANT.auth0.com/login/callback?connection=CONNECTION_NAME</code></li>
+        <li>Download and use the cert from <a href="https://mock-saml-idp.herokuapp.com/server.cert">https://mock-saml-idp.herokuapp.com/server.cert</a></li>
+        <li>Hit Try and make sure it works (or try <a href="https://mock-saml-idp.herokuapp.com/login">an IdP initiated flow</a>)!</li>
+    </ol>
+    <h2 id="template-variables-supported">Template variables supported</h2>
+    <pre><code>templateVariables = {
     id: '_abc',
     inResponseTo: SAMLRequest.id,
     instant: issueInstant,
@@ -22,5 +29,8 @@
 };
 </code></pre>
 
-Example: <pre>The time is: @@instant@@</pre>
-</body></html>
+Example:
+    <pre>The time is: @@instant@@</pre>
+</body>
+
+</html>
