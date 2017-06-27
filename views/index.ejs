@@ -2,6 +2,14 @@
 
 <head>
     <title>Mock SAML IdP</title>
+    <style>
+    .red {
+        color: #EB5424;
+    }
+    .yellow {
+        color: #EACA2C;
+    }
+    </style>
 </head>
 
 <body>
@@ -9,7 +17,7 @@
     <ol>
         <li><a href="https://manage.auth0.com/#/connections/enterprise">Head to your Auth0 Dashboard</a></li>
         <li>Create a new SAML connection</li>
-        <li>Use a URL such as: <code>https://mock-saml-idp.herokuapp.com/login?audience=urn:auth0:YOUR_TENANT:CONNECTION_NAME&amp;redirect_uri=https://YOUR_TENANT.auth0.com/login/callback?connection=CONNECTION_NAME</code></li>
+        <li>Use a URL such as: <code>https://mock-saml-idp.herokuapp.com/login?audience=urn:auth0:<span class='yellow'>YOUR_TENANT</span>:<span class='red'>CONNECTION_NAME</span>&amp;redirect_uri=https://<span class='yellow'>YOUR_TENANT</span>.auth0.com/login/callback?connection=<span class='red'>CONNECTION_NAME</span></code></li>
         <li>Download and use the cert from <a href="https://mock-saml-idp.herokuapp.com/server.cert">https://mock-saml-idp.herokuapp.com/server.cert</a></li>
         <li>Hit Try and make sure it works (or try <a href="https://mock-saml-idp.herokuapp.com/login">an IdP initiated flow</a>)!</li>
     </ol>
