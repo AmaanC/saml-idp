@@ -21,7 +21,7 @@ router.post('/continue', parameters({
 }), continueRoute);
 
 router.get('/server.cert', function(req, res){
-  var file = __dirname + '/../server.cert';
+  var file = __dirname + '/server.cert';
   res.download(file);
 });
 
