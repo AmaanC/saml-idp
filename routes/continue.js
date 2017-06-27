@@ -1,5 +1,6 @@
 const fs = require('fs');
 
+const uuidv4 = require('uuid/v4');
 const samlp = require('samlp');
 const saml20 = require('saml').Saml20;
 
@@ -72,7 +73,7 @@ let buildSamlResponse = function(req, res, next, reqData) {
     }
 
     let templateVariables = {
-        id: '_abc',
+        id: uuidv4(),
         inResponseTo: reqData.id,
         instant: issueInstant,
         after: afterInstant,
