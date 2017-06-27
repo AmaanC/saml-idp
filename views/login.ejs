@@ -68,9 +68,7 @@ IssueInstant="@@instant@@" Version="2.0">
 <textarea id='SAMLTemplate' name='SAMLTemplate' cols='80' rows='4'>
 <%=
 `<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" ID="@@id@@" InResponseTo="@@inResponseTo@@" Version="2.0" IssueInstant="@@instant@@" Destination="@@destination@@">
-    <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">
-        @@issuer@@
-    </saml:Issuer>
+    <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">@@issuer@@</saml:Issuer>
     <samlp:Status>
         <samlp:StatusCode Value="@@successStatusCode@@" />
     </samlp:Status>
