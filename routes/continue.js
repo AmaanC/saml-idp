@@ -44,27 +44,32 @@ let removeWhitespace = function(xml) {
     return trimmed;
 };
 
-let buildSamlResponse = function(req, res, reqData) {
+let buildSamlResponse = function(req, res, next, reqData) {
     let date = new Date();
     let issueInstant = formatDate(date);
     date.setDate(date.getDate() + 1);
     let afterInstant = formatDate(date);
 
     let cert = pemToCert(fs.readFileSync('server.cert'));
+    let sig;
+    try {
+        sig = new SignedXml(null, {
+            idAttribute: 'ID'
+        });
+        sig.addReference("//*[local-name(.)='Assertion']", ["http://www.w3.org/2000/09/xmldsig#enveloped-signature", "http://www.w3.org/2001/10/xml-exc-c14n#"],
+                         'http://www.w3.org/2000/09/xmldsig#sha1');
+        sig.signingKey = fs.readFileSync('server.key');
 
-    let sig = new SignedXml(null, {
-        idAttribute: 'ID'
-    });
-    sig.addReference("//*[local-name(.)='Assertion']", ["http://www.w3.org/2000/09/xmldsig#enveloped-signature", "http://www.w3.org/2001/10/xml-exc-c14n#"],
-        'http://www.w3.org/2000/09/xmldsig#sha1');
-    sig.signingKey = fs.readFileSync('server.key');
-
-    sig.keyInfoProvider = {
-        getKeyInfo: function(key, prefix) {
-            prefix = prefix ? prefix + ':' : prefix;
-            return "<" + prefix + "X509Data><" + prefix + "X509Certificate>" + cert + "</" + prefix + "X509Certificate></" + prefix + "X509Data>";
-        }
-    };
+        sig.keyInfoProvider = {
+            getKeyInfo: function(key, prefix) {
+                prefix = prefix ? prefix + ':' : prefix;
+                return "<" + prefix + "X509Data><" + prefix + "X509Certificate>" + cert + "</" + prefix + "X509Certificate></" + prefix + "X509Data>";
+            }
+        };
+    }
+    catch(err) {
+        return next(err);
+    }
 
     let templateVariables = {
         id: '_abc',
@@ -84,16 +89,22 @@ let buildSamlResponse = function(req, res, reqData) {
         templateVariables
     );
 
-    sig.computeSignature(removeWhitespace(samlAssertion), {
-        prefix: req.body.prefix || 'ds'
-    });
+    try {
+        sig.computeSignature(removeWhitespace(samlAssertion), {
+            prefix: req.body.prefix || 'ds'
+        });
+    }
+    catch(err) {
+        return next(err);
+    }
+
     let signedAssertion = sig.getSignedXml();
 
     templateVariables.assertion = signedAssertion;
-    let samlResponse = supplant(
+    let samlResponse = removeWhitespace(supplant(
         req.body.SAMLTemplate,
         templateVariables
-    );
+    ));
 
     res.render('form', {
         callback: req.body.redirect_uri ||
@@ -111,11 +122,11 @@ module.exports = function(req, res, next) {
             req, {},
             function(err, data) {
                 if (err) return next(err);
-                buildSamlResponse(req, res, data);
+                buildSamlResponse(req, res, next, data);
             }
         );
     } else {
-        buildSamlResponse(req, res, {
+        buildSamlResponse(req, res, next, {
             issuer: '',
             destination: '',
             id: ''
