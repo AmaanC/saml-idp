@@ -1,5 +1,6 @@
-# Magical SAML IdP
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
+# Magical SAML IdP
 
 1. [Head to your Auth0 Dashboard](https://manage.auth0.com/#/connections/enterprise)
 2. Create a new SAML connection
